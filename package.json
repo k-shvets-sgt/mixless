@@ -1,0 +1,12 @@
+{
+  "name": "mixless",
+  "version": "1.0.0",
+  "description": "A small library of less useful mixins. Includes over 50 useful mixins.",
+  "author": "Kirill Shvets",
+  "license": "MIT",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-file-include": "^2.0.1",
+    "gulp-rename": "^1.3.0"
+  }
+}

@@ -1,0 +1,1121 @@
+//==================================================
+// Dependencies: none.
+// Dependents:   ml-flex-grid and ml-helper.
+//==================================================
+
+// `-l` in @mobile-l and @tablet-l means `larger`
+//
+// mobile:   <= 567px
+// mobile-l: >= 568px
+// tablet:   >= 768px
+// tablet-l: >= 1024px
+// desktop:  >= 1280px
+
+// The smallest screen size must be equal to the next screen size.
+@mobile:   @mobile-l;
+@mobile-l: 568;
+@tablet:   768;
+@tablet-l: 1024;
+@desktop:  1280;
+
+// IMPORTANT NOTE!
+// You should keep the accordance between breakpoints and breakpoints prefixes.
+// But length of @breakpoints is always less by one than @breakpoints-prefixes,
+// because the smallest screen size doesn't have own breakpoint but have prefix.
+
+// @breakpoints and @breakpoints-prefixes are using in ml-flex-grid and ml-helper.
+@breakpoints: @mobile, @mobile-l, @tablet, @tablet-l, @desktop;
+
+// BEMIT version
+// NOTE!
+// The '\' required to escape '@' in outputting CSS.
+@breakpoints-prefixes: ~"\@mobile", ~"\@mobile-l", ~"\@tablet", ~"\@tablet-l", ~"\@desktop";
+
+// Or you can use usual version.
+// @breakpoints-prefixes: _mobile, _mobile-l, _tablet, _tablet-l, _desktop;
+
+// Also you can use the shorter version.
+//
+// xs: <= 567px,
+// sm: >= 568px,
+// md: >= 768px,
+// lg: >= 1024px,
+// xl: >= 1280px
+
+// Just uncomment this part.
+//
+// @xs: @sm;
+// @sm: 568;
+// @md: 768;
+// @lg: 1024;
+// @xl: 1280;
+//
+// @breakpoints:          @xs, @sm, @md, @lg, @xl;
+// @breakpoints-prefixes: _xs, _sm, _md, _lg, _xl;
+;
+//==================================================
+// Dependencies: none.
+// Dependents:   none.
+//==================================================
+
+.valign-wrapper() {
+    .display-flex();
+    .align-items(center);
+}
+
+.flex-container() {
+    .display-flex();
+    .flex-flow();
+}
+
+// @param: flex (default) | inline
+.display-flex(@display: flex) {
+    & when (@display = flex) {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+    }
+    & when (@display = inline) {
+        display: -webkit-inline-box;
+        display: -ms-inline-flexbox;
+        display: -webkit-inline-flex;
+        display: inline-flex;
+    }
+}
+
+// @param: row (default) | column | row-reverse | column-reverse
+.flex-direction(@direction: row) {
+    & when (@direction = row) {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+    }
+    & when (@direction = column) {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+    }
+    & when (@direction = row-reverse) {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: reverse;
+    }
+    & when (@direction = column-reverse) {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: reverse;
+    }
+    -ms-flex-direction: @direction;
+    -webkit-flex-direction: @direction;
+    flex-direction: @direction;
+}
+
+// @param: wrap (default) | nowrap | reverse
+.flex-wrap(@wrap: wrap) {
+    & when (@wrap = wrap) or (@wrap = nowrap) {
+        -ms-flex-wrap: @wrap;
+        -webkit-flex-wrap: @wrap;
+        flex-wrap: @wrap;
+    }
+    & when (@wrap = reverse) {
+        -ms-flex-wrap: wrap-reverse;
+        -webkit-flex-wrap: wrap-reverse;
+        flex-wrap: wrap-reverse;
+    }
+}
+
+// @param direction: row (default) | column | row-reverse | column-reverse
+// @param wrap:      wrap (default) | nowrap | reverse
+.flex-flow(@direction: row, @wrap: wrap) {
+    & when (@direction = row) {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+    }
+    & when (@direction = column) {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+    }
+    & when (@direction = row-reverse) {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: reverse;
+    }
+    & when (@direction = column-reverse) {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: reverse;
+    }
+    -webkit-flex-flow: @direction @wrap;
+    -ms-flex-flow: @direction @wrap;
+    flex-flow: @direction @wrap;
+}
+
+// @param: auto (default) | number | inherit
+.flex-basis(@value: auto) {
+    -webkit-flex-basis: @value;
+    -ms-flex-preferred-size: @value;
+    flex-basis: @value;
+}
+
+// @param: 0 (default) | number | inherit
+.flex-grow(@value: 0) {
+    -webkit-box-flex: @value;
+    -webkit-flex-grow: @value;
+    -ms-flex-positive: @value;
+    flex-grow: @value;
+}
+
+// @param: 1 (default) | number | inherit
+.flex-shrink(@value: 1) {
+    -webkit-flex-shrink: @value;
+    -ms-flex-negative: @value;
+    flex-shrink: @value;
+}
+
+// @param grow:   number
+// @param shrink: number
+// @param basis:  auto | number
+.flex(@grow, @shrink, @basis) {
+    -webkit-box-flex: @grow;
+    -webkit-flex: @grow @shrink @basis;
+    -ms-flex: @grow @shrink @basis;
+    flex: @grow @shrink @basis;
+}
+
+// @param: none (default) | auto
+.flex(@value: none) {
+    & when (@value = none) {
+        -webkit-box-flex: 1;
+        -webkit-flex: 1 1 auto;
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+    }
+    & when (@value = auto) {
+        -webkit-box-flex: 0;
+        -webkit-flex: 0 0 auto;
+        -ms-flex: 0 0 auto;
+        flex: 0 0 auto;
+    }
+}
+
+// @param: start (default) | end | center | between | around | evenly
+.justify-content(@justify: start) {
+    & when (@justify = start) or (@justify = end) {
+        -webkit-box-pack: @justify;
+        -ms-flex-pack: @justify;
+        -webkit-justify-content: ~"flex-@{justify}";
+        justify-content: ~"flex-@{justify}";
+    }
+    & when (@justify = center) {
+        -webkit-box-pack: @justify;
+        -ms-flex-pack: @justify;
+        -webkit-justify-content: @justify;
+        justify-content: @justify;
+    }
+    & when (@justify = between) {
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        -webkit-justify-content: space-between;
+        justify-content: space-between;
+    }
+    & when (@justify = around) {
+        -ms-flex-pack: distribute;
+        -webkit-justify-content: space-around;
+        justify-content: space-around;
+    }
+    & when (@justify = evenly) {
+        -webkit-box-pack: space-evenly;
+        -ms-flex-pack: space-evenly;
+        -webkit-justify-content: space-evenly;
+        justify-content: space-evenly;
+    }
+}
+
+// @param: start (default) | end | center | baseline | stretch
+.align-items(@align: start) {
+    & when (@align = start) or (@align = end) {
+        -webkit-box-align: @align;
+        -ms-flex-align: @align;
+        -webkit-align-items: ~"flex-@{align}";
+        align-items: ~"flex-@{align}";
+    }
+    & when (@align = center) or (@align = baseline) or (@align = stretch) {
+        -webkit-box-align: @align;
+        -ms-flex-align: @align;
+        -webkit-align-items: @align;
+        align-items: @align;
+    }
+}
+
+// @param: start (default) | end | center | between | around | stretch
+.align-content(@align: start) {
+    & when (@align = start) or (@align = end) {
+        -ms-flex-line-pack: @align;
+        -webkit-align-content: ~"flex-@{align}";
+        align-content: ~"flex-@{align}";
+    }
+    & when (@align = center) or (@align = stretch) {
+        -ms-flex-line-pack: @align;
+        -webkit-align-content: @align;
+        align-content: @align;
+    }
+    & when (@align = between) {
+        -ms-flex-line-pack: justify;
+        -webkit-align-content: space-between;
+        align-content: space-between;
+    }
+    & when (@align = around) {
+        -ms-flex-line-pack: distribute;
+        -webkit-align-content: space-around;
+        align-content: space-around;
+    }
+}
+
+// @param: auto (default) | start | end | center | baseline | stretch
+.align-self(@align: auto) {
+    & when (@align = start) or (@align = end) {
+        -ms-flex-item-align: @align;
+        -webkit-align-self: ~"flex-@{align}";
+        align-self: ~"flex-@{align}";
+    }
+    & when (@align = center) or (@align = baseline) or (@align = stretch) or (@align = auto) {
+        -ms-flex-item-align: @align;
+        -webkit-align-self: @align;
+        align-self: @align;
+    }
+}
+
+// @param: 0 (default) | integer
+.order(@index: 0) {
+    -webkit-box-ordinal-group: @index + 1;
+    -ms-flex-order: @index;
+    -webkit-order: @index;
+    order: @index;
+};
+// If you don't want to use the grid you can delete this import below.
+//==================================================
+// Dependencies: ml-breakpoints and ml-media.
+// Dependents:   none.
+//==================================================
+@import (reference) "../ml-breakpoints/ml-breakpoints";
+@import (reference) "../ml-media/ml-media";
+
+// This grid uses breakpoints variables from ml-breakpoints and media queries from ml-media.
+// If you want to change the breakpoints or breakpoints prefixes you may to do it in ml-breakpoints.
+//
+// Mobile first principle applies.
+//
+// It will be automatically generate CSS-classes.
+
+// IMPORTANT NOTE!
+// The selectors .container, .row and [class*="column-"] will not generated unless calling .generate-grid().
+// In previous version they were created independently of the .generate-grid() calling.
+
+// Grid options.
+// You can change it if you need.
+@column-count:  12;
+@column-prefix: column-;
+@offset-prefix: offset-;
+@order-prefix:  order-;
+
+// If you don't want to use the gutters set this option to `none`.
+@column-gutter: 12px;
+
+// If you don't want to use the maximal width for container set this option to `none`.
+@container-max-width: 1280px;
+
+// Helper mixin for creating (or not) column gutters.
+.column-gutters() {
+    & when not (@column-gutter = none) {
+        padding-left: @column-gutter;
+        padding-right: @column-gutter;
+    }
+}
+
+// Helper mixin for creating (or not) container gutters.
+.container-gutters() {
+    .column-gutters();
+}
+
+// Helper mixin for set (or not) container max width.
+.container-max-width() {
+    & when not (@container-max-width = none) {
+        max-width: @container-max-width;
+    }
+}
+
+// Helper mixin for creating (or not) row gutters.
+.row-gutters() {
+    & when not (@column-gutter = none) {
+        padding-left: -@column-gutter;
+        padding-right: -@column-gutter;
+    }
+}
+
+// Ruleset for container.
+.container-ruleset() {
+    .container {
+        width: 100%;
+        .container-max-width();
+        .container-gutters();
+        margin: 0 auto;
+        .media-min(768 {
+            width: 93.75%;
+        });
+        .media-min(1280 {
+            width: 84.375%;
+        });
+    }
+}
+
+// Ruleset for row.
+.row-ruleset() {
+    .row {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        -webkit-flex-wrap: wrap;
+        flex-wrap: wrap;
+        .row-gutters();
+    }
+}
+
+// Common ruleset for all columns.
+.columns-ruleset() {
+    [class*=~'"@{column-prefix}"'] {
+        width: 100%;
+        min-height: 1px;
+        -webkit-box-flex: 0;
+    }
+}
+
+// NOTE!
+// .make-column(), .make-offset() and .make-order() are helper mixins for mixin .generate-grid().
+// I don't recommend to use them standalone.
+.make-column(@breakpoint-prefix: none, @index: @column-count) when (@index > 0) {
+    @width: ~"`(@{index} / @{column-count}) * 100`%";
+    @prefix: @breakpoint-prefix;
+    & when (@prefix = none) {
+        .@{column-prefix}@{index} {
+            -ms-flex: 0 0 @width;
+            -webkit-flex: 0 0 @width;
+            flex: 0 0 @width;
+            max-width: @width;
+            .column-gutters();
+        }
+    }
+    & when not (@prefix = none) {
+        .@{column-prefix}@{index}@{prefix} {
+            -ms-flex: 0 0 @width;
+            -webkit-flex: 0 0 @width;
+            flex: 0 0 @width;
+            max-width: @width;
+            .column-gutters();
+        }
+    }
+    .make-column(@prefix, @index - 1);
+}
+
+.make-offset(@breakpoint-prefix: none, @index: @column-count) when (@index > 0) {
+    @length: ~"`(@{index} / @{column-count}) * 100`%";
+    @prefix: @breakpoint-prefix;
+    & when (@prefix = none) {
+        .@{offset-prefix}@{index} {
+            margin-left: @length;
+        }
+    }
+    & when not (@prefix = none) {
+        .@{offset-prefix}@{index}@{prefix} {
+            margin-left: @length;
+        }
+    }
+    .make-offset(@prefix, @index - 1);
+}
+
+.make-order(@breakpoint-prefix: none, @index: @column-count) when (@index > 0) {
+    @prefix: @breakpoint-prefix;
+    & when (@prefix = none) {
+        .@{order-prefix}@{index} {
+            -webkit-box-ordinal-group: @index + 1;
+            -ms-flex-order: @index;
+            -webkit-order: @index;
+            order: @index;
+        }
+    }
+    & when not (@prefix = none) {
+        .@{order-prefix}@{index}@{prefix} {
+            -webkit-box-ordinal-group: @index + 1;
+            -ms-flex-order: @index;
+            -webkit-order: @index;
+            order: @index;
+        }
+    }
+    .make-order(@prefix, @index - 1);
+}
+
+// If you don't need .make-offset() or .make-order() just remove they calling in .generate-grid().
+.generate-grid(@breakpoints: @breakpoints, @prefixes: @breakpoints-prefixes, @index: 0) when (@index =< length(@breakpoints)) {
+    @point: extract(@breakpoints, @index);
+    @prefix: extract(@prefixes, @index);
+  	& when (@index = 0) {
+        // Write the rulesets.
+        .container-ruleset();
+        .row-ruleset();
+        .columns-ruleset();
+        // Call the .make- commands to create columns, offsets and orders.
+        .make-column();
+        .make-offset();
+        .make-order();
+    }
+    // When @index = 1, the iteration is skipped, so as not to create the grid for the smallest size.
+    & when (@index > 1) {
+        .media-min(@point {
+            // Call the .make- commands to create columns, offsets and orders.
+            .make-column(@prefix);
+            .make-offset(@prefix);
+            .make-order(@prefix);
+        });
+    }
+    .generate-grid(@breakpoints, @prefixes, @index + 1);
+}
+
+.generate-grid();;
+//==================================================
+// Dependencies: none.
+// Dependents:   none.
+//==================================================
+
+// Usage example:
+// .font-face('Open Sans', 'assets/fonts/opensans');
+// .font-face('Open Sans', 'assets/fonts/opensansbold', 700);
+// .font-face('Open Sans', 'assets/fonts/opensansitalicsemibold', 600, italic);
+//
+// By default it works with .woff2, .woff and .ttf.
+//
+// You can edit this mixin if you need more (or less) font types.
+// I hope you know how to do it.
+
+.font-face(@family, @path, @weight: normal, @style: normal) {
+    @font-face {
+        font-family: @family;
+        src: url('@{path}.woff2') format('woff2'),
+        url('@{path}.woff') format('woff'),
+        url('@{path}.ttf') format('truetype');
+        font-weight: @weight;
+        font-style: @style;
+    }
+};
+//==================================================
+// Dependencies: none.
+// Dependents:   none.
+//==================================================
+
+// Default options of font.
+@font-family: sans-serif;
+@font-size:   16px;
+@line-height: 1.45;
+@font-color:  #000000;
+@font-style:  normal;
+@font-weight: normal;
+// Please, don't edit this option.
+@font-stack: @font-size/@line-height @font-family;
+
+html {
+    font: @font-stack;
+    font-weight: @font-weight;
+    font-style: @font-style;
+    color: @font-color;
+}
+;
+//==================================================
+// Dependencies: ml-breakpoints and ml-media.
+// Dependents:   none.
+//==================================================
+@import (reference) "../ml-breakpoints/ml-breakpoints";
+@import (reference) "../ml-media/ml-media";
+
+// Usage example:
+//
+// .class {
+//     .clearfix();
+//     .size(60px, 120px);
+// }
+.clearfix() {
+    &::before,
+    &::after {
+        display: table;
+        content: "";
+    }
+    &::after {
+        clear: both;
+    }
+}
+
+// @param: content | border | inherit
+.box-sizing(@sizing) {
+    & when not (@sizing = inherit) {
+        -webkit-box-sizing: ~"@{sizing}-box";
+        box-sizing: ~"@{sizing}-box";
+    }
+    & when (@sizing = inherit) {
+        -webkit-box-sizing: @sizing;
+        box-sizing: @sizing;
+    }
+}
+
+.size(@width, @height: @width) {
+    width: @width;
+    height: @height;
+}
+
+.center-block() {
+    margin: 0 auto;
+}
+
+.push-auto() {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.gutters(@value) {
+    padding-left: @value;
+    padding-right: @value;
+}
+
+.wrapper(@value) {
+    padding-top: @value;
+    padding-bottom: @value;
+}
+
+.hidden() {
+    display: none;
+}
+
+// Usage example:
+// .class {
+//     .transform(scale, 1.5);
+//     .transform(rotate, 45deg);
+// }
+//
+// CSS output:
+// .class {
+//     -webkit-transform: scale(1.5) rotate(45deg);
+//     transform: scale(1.5) rotate(45deg);
+// }
+.transform(@prop, @value) {
+    -webkit-transform+_: ~"@{prop}(@{value})";
+    transform+_: ~"@{prop}(@{value})";
+}
+
+// Usage example:
+// .class {
+//     .box-shadow(0 2px 5px 0 rgba(0, 0, 0, 0.16));
+//	   .box-shadow(0 2px 10px 0 rgba(0, 0, 0, 0.12));
+// }
+//
+// CSS output:
+// .class {
+//     -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+//     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+// }
+.box-shadow(@list) {
+    -webkit-box-shadow+: @list;
+    box-shadow+: @list;
+}
+
+// Usage example:
+// .class {
+//     .filter(grayscale, 50%);
+//     .filter(blur, 5px);
+// }
+//
+// CSS output:
+// .class {
+//     -webkit-filter: grayscale(50%) blur(5px);
+//     filter: grayscale(50%) blur(5px);
+// }
+.filter(@filter, @value) {
+    -webkit-filter+_: ~"@{filter}(@{value})";
+    filter+_: ~"@{filter}(@{value})";
+}
+
+// @param: auto (default) | none | text | all | contain
+.user-select(@select: auto) {
+    -webkit-user-select: @select;
+    -moz-user-select: @select;
+    -ms-user-select: @select;
+    user-select: @select;
+}
+
+// Usage example:
+// .class {
+//      .placeholder(#ccc);
+// }
+//
+// Or outside of any selector:
+// .placeholder(#ccc);
+.placeholder(@color) {
+    ::-webkit-input-placeholder {
+        color: @color;
+    }
+    ::-moz-placeholder {
+        color: @color;
+    }
+    :-ms-input-placeholder {
+        color: @color;
+    }
+    :-moz-placeholder {
+        color: @color;
+    }
+}
+
+// Generate helper classes to hidden elements on other screens.
+// Usage example:
+// .generate-hidden-classes();
+//
+// CSS output:
+// .hidden {
+//     display: none;
+// }
+// @media (max-width: 567px) {
+//     .hidden\@mobile-only {
+//         display: none;
+//     }
+// }
+// @media (min-width: 568px) {
+//     .hidden\@mobile-l {
+//         display: none;
+//     }
+// }
+// @media (min-width: 568px) and (max-width: 767px) {
+//     .hidden\@mobile-l-only {
+//         display: none;
+//     }
+// }
+// ...
+// @media (min-width: 1280px) {
+//     .hidden\@desktop {
+//         display: none;
+//     }
+// }
+
+// You can change it if you need.
+@hidden-class-prefix: hidden;
+
+.generate-hidden-classes(@breakpoints: @breakpoints, @prefixes: @breakpoints-prefixes, @index: 0) when (@index =< length(@breakpoints)) {
+    @prefix: extract(@prefixes, @index);
+    @point: extract(@breakpoints, @index);
+    & when (@index = 0) {
+        .@{hidden-class-prefix} {
+            .hidden();
+        }
+    }
+  	& when (@index = 1) {
+  		.@{hidden-class-prefix}@{prefix}-only {
+            .media-max(@point {
+                .hidden();
+            });
+        }
+  	}
+  	& when (@index > 1) and (@index < length(@breakpoints)) {
+        @next-point: extract(@breakpoints, @index + 1);
+        .@{hidden-class-prefix}@{prefix} {
+            .media-min(@point {
+                .hidden();
+            });
+        }
+        .@{hidden-class-prefix}@{prefix}-only {
+            .media-min-and-max(@point, @next-point {
+                .hidden();
+            });
+        }
+    }
+    & when (@index = length(@breakpoints)) {
+        .@{hidden-class-prefix}@{prefix} {
+            .media-min(@point {
+                .hidden();
+            });
+        }
+    }
+    .generate-hidden-classes(@breakpoints, @prefixes, @index + 1);
+}
+
+.generate-hidden-classes();;
+//==================================================
+// Dependencies: none.
+// Dependents:   ml-flex-grid.
+//==================================================
+
+// You don't even have to specify `px` (or other unit). This will be done automatically.
+// Usage example:
+//
+// .class {
+//      .media-min(768 {
+//          ...
+//      });
+//      .media-min-and-max(768, 1200 {
+//          // from 768px to 1199px
+//          ...
+//      });
+//
+//      Also you can use the variables:
+//      .media-max(@tablet {
+//          ...
+//      });
+//      Also you can use the variables:
+//      .media-min-and-max(@tablet-l, @desktop {
+//          ...
+//      });
+//  }
+//
+// If you want to change unit and dimension:
+// .class {
+//     .media-min(40 {
+//         ...
+//     }, rem, height);
+// }
+//
+// If you want to change only unit:
+// .class {
+//     .media-min(40 {
+//         ...
+//     }, rem);
+// }
+//
+// If you want to change only dimension:
+// .class {
+//     .media-min(568 {
+//         ...
+//     }, @dimension: height);
+// }
+//
+// And I think this is amazing (if you work with `rem`):
+// Less:
+// .class {
+//     // 40rem = 640px
+//     .media-max(40 {
+//         ...
+//         property: value;
+//     })
+// }
+//
+// Output CSS:
+// // 39.9375rem = 639px
+// @media (max-width: 39.9375rem) {
+//     .class {
+//         ...
+//         property: value;
+//     }
+// }
+
+// Sets the main unit for media queries.
+// Change this if you want to change default unit for all media queries.
+// Highly recommended use only `px` or `rem`. Don't use `em` or other units.
+@unit-for-media-queries: px;
+// Please don't write here `16px` or other value with unit. Only integer number.
+@rem-in-px: 16;
+// Don't edit this option!
+@diff-in-rem: 1 / @rem-in-px;
+
+// Media query with the starter breakpoint.
+.media-min(@min, @ruleset, @unit: @unit-for-media-queries, @dimension: width) {
+    & when (@dimension = width) {
+        @media (min-width: ~"@{min}@{unit}") {
+            @ruleset();
+        }
+    }
+    & when (@dimension = height) {
+        @media (min-height: ~"@{min}@{unit}") {
+            @ruleset();
+        }
+    }
+}
+
+// Media query with the final breakpoint.
+.media-max(@max, @ruleset, @unit: @unit-for-media-queries, @dimension: width) {
+    & when (@unit = px) {
+    	& when (@dimension = width) {
+        	@media (max-width: ~"`@{max} - 1`@{unit}") {
+            	@ruleset();
+        	}
+    	}
+    	& when (@dimension = height) {
+        	@media (max-height: ~"`@{max} - 1`@{unit}") {
+            	@ruleset();
+        	}
+    	}
+  	}
+    & when (@unit = rem) {
+    	& when (@dimension = width) {
+          @media (max-width: ~"`@{max} - @{diff-in-rem}`@{unit}") {
+            	@ruleset();
+        	}
+    	}
+    	& when (@dimension = height) {
+        	@media (max-height: ~"`@{max} - @{diff-in-rem}`@{unit}") {
+            	@ruleset();
+        	}
+    	}
+  	}
+}
+
+// Media query with the both breakpoints.
+.media-min-and-max(@min, @max, @ruleset, @unit: @unit-for-media-queries, @dimension: width) {
+    & when (@unit = px) {
+        & when (@dimension = width) {
+            @media (min-width: ~"@{min}@{unit}") and (max-width: ~"`@{max} - 1`@{unit}") {
+                @ruleset();
+            }
+        }
+        & when (@dimension = height) {
+            @media (min-height: ~"@{min}@{unit}") and (max-height: ~"`@{max} - 1`@{unit}") {
+                @ruleset();
+            }
+        }
+    }
+    & when (@unit = rem) {
+        & when (@dimension = width) {
+            @media (min-width: ~"@{min}@{unit}") and (max-width: ~"`@{max} - @{diff-in-rem}`@{unit}") {
+                @ruleset();
+            }
+        }
+        & when (@dimension = height) {
+            @media (min-height: ~"@{min}@{unit}") and (max-height: ~"`@{max} - @{diff-in-rem}`@{unit}") {
+                @ruleset();
+            }
+        }
+    }
+}
+
+// This mixin can be useful for creating media queries for devices whose pixel ratio is different from 1.
+// E.g. to replace images for Retina.
+//
+// Usage example:
+// .class {
+//     ...
+//     .media-high-res({
+//         ...
+//     })
+// }
+//
+// .class {
+//     ...
+//     .media-high-res({
+//         ...
+//     }, 3)
+// }
+//
+// By default @pixel-ratio is 2.
+.media-high-res(@ruleset, @pixel-ratio: 2) {
+    @media (resolution: ~"@{pixel-ratio}dppx") {
+        @ruleset();
+    }
+    // If browser doesn't support `dppx`
+    @media (resolution: ~"`@{pixel-ratio} * 96`dpi") {
+        @ruleset();
+    }
+    // Especially for Safari
+    @media (-webkit-device-pixel-ratio: @pixel-ratio) {
+        @ruleset();
+    }
+}
+
+// Allow detect pointer type.
+//
+// @param pointer: coarse (for touchscreen) | fine (for mouse or trackpad)
+.media-pointer(@pointer, @ruleset) {
+    @media (pointer: @pointer) {
+        @ruleset();
+    }
+}
+
+// Allow check hover abilities.
+//
+// @param hover: true | false
+.media-hover(@hover, @ruleset) {
+    & when (@hover = true) {
+        @media (hover) {
+            @ruleset();
+        }
+    }
+    & when (@hover = false) {
+        @media (hover: none) {
+            @ruleset();
+        }
+    }
+}
+
+// @param orientation: portrait | landscape
+.media-orientation(@orientation, @ruleset) {
+    @media (orientation: @orientation) {
+        @ruleset();
+    }
+};
+//==================================================
+// Dependencies: none.
+// Dependents:   none.
+//==================================================
+@-ms-viewport {
+    width: device-width;
+}
+
+html {
+    padding: 0;
+    margin: 0;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -ms-overflow-style: scrollbar;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    margin: 0;
+}
+
+*,
+*::before,
+*::after {
+    outline: 0;
+    vertical-align: baseline;
+    -webkit-box-sizing: inherit;
+    box-sizing: inherit;
+    -webkit-tap-highlight-color: transparent;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+main,
+menu,
+nav,
+section,
+summary {
+    display: block;
+}
+
+audio,
+canvas,
+progress,
+video {
+    display: inline-block;
+}
+
+img {
+    vertical-align: bottom;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a,
+area,
+button,
+[role="button"],
+input,
+label,
+select,
+summary,
+textarea {
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+}
+
+label,
+button,
+[role="button"],
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+button,
+[role="button"],
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: button;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+input[type="password"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+};
+//==================================================
+// Dependencies: ml-font.
+// Dependents:   none.
+//==================================================
+
+// This module automatically generate headings hierarchy.
+// Mixins call:
+// .generate-type-scale()
+//
+// Output in CSS:
+// h4 {
+//     font-size: 40px;
+//     line-height: 1.2;
+// }
+// ...
+// small {
+//     font-size: 12px;
+// }
+// p {
+//     font-size: 16px;
+//     line-height: 1.45;
+// }
+//
+// You can change the ratio. Just select one of preset ratio below or set your own.
+// By default the ratio is Major Third (@major-third, 1.250).
+
+// If you need to change the base font, you can do it in ml-font.
+@base-size:        16px;
+@base-line-height: 1.45;
+
+// Please don't edit this part. These are the preset options.
+@minor-second:     1.067;
+@major-second:     1.125;
+@minor-third:      1.200;
+@major-third:      1.250;
+@perfect-fourth:   1.333;
+@augmented-fourth: 1.414;
+@perfect-fifth:    1.500;
+@golden-ratio:     1.618;
+// You can change this option below if you want to change the ratio of type scale.
+@type-scale-ratio: @major-third;
+
+// Sets the line-height for `h1`, `h2`, `h3` and `h4`.
+@heading-line-height: 1.2;
+
+.generate-type-scale(@index: 4) when (@index > 0) {
+    @ratio: pow(@type-scale-ratio, @index);
+    h@{index} {
+        font-size: ceil(@base-size * @ratio);
+        line-height: @heading-line-height;
+    }
+    & when (@index = 1) {
+        small {
+            font-size: floor(@base-size/@type-scale-ratio);
+        }
+        p {
+            font-size: @base-size;
+            line-height: @base-line-height;
+        }
+    }
+    .generate-type-scale(@index - 1);
+}
+
+.generate-type-scale();;
