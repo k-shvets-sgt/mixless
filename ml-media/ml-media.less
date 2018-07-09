@@ -70,9 +70,9 @@
 // Highly recommended use only `px` or `rem`. Don't use `em` or other units.
 @unit-for-media-queries: px;
 // Please don't write here `16px` or other value with unit. Only integer number.
-@rem-in-px: 16;
+@rem-in-px: 16px;
 // Don't edit this option!
-@diff-in-rem: 1 / @rem-in-px;
+@diff-in-rem: 1 / unit(@rem-in-px);
 
 // Media query with the starter breakpoint.
 .media-min(@min, @ruleset, @unit: @unit-for-media-queries, @dimension: width) {
