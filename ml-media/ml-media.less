@@ -1,0 +1,210 @@
+//==================================================
+// Dependencies: none.
+// Dependents:   ml-flex-grid.
+//==================================================
+
+// You don't even have to specify `px` (or other unit). This will be done automatically.
+// Usage example:
+//
+// .class {
+//      .media-min(768 {
+//          ...
+//      });
+//      .media-min-and-max(768, 1200 {
+//          // from 768px to 1199px
+//          ...
+//      });
+//
+//      Also you can use the variables:
+//      .media-max(@tablet {
+//          ...
+//      });
+//      Also you can use the variables:
+//      .media-min-and-max(@tablet-l, @desktop {
+//          ...
+//      });
+//  }
+//
+// If you want to change unit and dimension:
+// .class {
+//     .media-min(40 {
+//         ...
+//     }, rem, height);
+// }
+//
+// If you want to change only unit:
+// .class {
+//     .media-min(40 {
+//         ...
+//     }, rem);
+// }
+//
+// If you want to change only dimension:
+// .class {
+//     .media-min(568 {
+//         ...
+//     }, @dimension: height);
+// }
+//
+// And I think this is amazing (if you work with `rem`):
+// Less:
+// .class {
+//     // 40rem = 640px
+//     .media-max(40 {
+//         ...
+//         property: value;
+//     })
+// }
+//
+// Output CSS:
+// // 39.9375rem = 639px
+// @media (max-width: 39.9375rem) {
+//     .class {
+//         ...
+//         property: value;
+//     }
+// }
+
+// Sets the main unit for media queries.
+// Change this if you want to change default unit for all media queries.
+// Highly recommended use only `px` or `rem`. Don't use `em` or other units.
+@unit-for-media-queries: px;
+// Please don't write here `16px` or other value with unit. Only integer number.
+@rem-in-px: 16;
+// Don't edit this option!
+@diff-in-rem: 1 / @rem-in-px;
+
+// Media query with the starter breakpoint.
+.media-min(@min, @ruleset, @unit: @unit-for-media-queries, @dimension: width) {
+    & when (@dimension = width) {
+        @media (min-width: ~"@{min}@{unit}") {
+            @ruleset();
+        }
+    }
+    & when (@dimension = height) {
+        @media (min-height: ~"@{min}@{unit}") {
+            @ruleset();
+        }
+    }
+}
+
+// Media query with the final breakpoint.
+.media-max(@max, @ruleset, @unit: @unit-for-media-queries, @dimension: width) {
+    & when (@unit = px) {
+    	& when (@dimension = width) {
+        	@media (max-width: ~"`@{max} - 1`@{unit}") {
+            	@ruleset();
+        	}
+    	}
+    	& when (@dimension = height) {
+        	@media (max-height: ~"`@{max} - 1`@{unit}") {
+            	@ruleset();
+        	}
+    	}
+  	}
+    & when (@unit = rem) {
+    	& when (@dimension = width) {
+          @media (max-width: ~"`@{max} - @{diff-in-rem}`@{unit}") {
+            	@ruleset();
+        	}
+    	}
+    	& when (@dimension = height) {
+        	@media (max-height: ~"`@{max} - @{diff-in-rem}`@{unit}") {
+            	@ruleset();
+        	}
+    	}
+  	}
+}
+
+// Media query with the both breakpoints.
+.media-min-and-max(@min, @max, @ruleset, @unit: @unit-for-media-queries, @dimension: width) {
+    & when (@unit = px) {
+        & when (@dimension = width) {
+            @media (min-width: ~"@{min}@{unit}") and (max-width: ~"`@{max} - 1`@{unit}") {
+                @ruleset();
+            }
+        }
+        & when (@dimension = height) {
+            @media (min-height: ~"@{min}@{unit}") and (max-height: ~"`@{max} - 1`@{unit}") {
+                @ruleset();
+            }
+        }
+    }
+    & when (@unit = rem) {
+        & when (@dimension = width) {
+            @media (min-width: ~"@{min}@{unit}") and (max-width: ~"`@{max} - @{diff-in-rem}`@{unit}") {
+                @ruleset();
+            }
+        }
+        & when (@dimension = height) {
+            @media (min-height: ~"@{min}@{unit}") and (max-height: ~"`@{max} - @{diff-in-rem}`@{unit}") {
+                @ruleset();
+            }
+        }
+    }
+}
+
+// This mixin can be useful for creating media queries for devices whose pixel ratio is different from 1.
+// E.g. to replace images for Retina.
+//
+// Usage example:
+// .class {
+//     ...
+//     .media-high-res({
+//         ...
+//     })
+// }
+//
+// .class {
+//     ...
+//     .media-high-res({
+//         ...
+//     }, 3)
+// }
+//
+// By default @pixel-ratio is 2.
+.media-high-res(@ruleset, @pixel-ratio: 2) {
+    @media (resolution: ~"@{pixel-ratio}dppx") {
+        @ruleset();
+    }
+    // If browser doesn't support `dppx`
+    @media (resolution: ~"`@{pixel-ratio} * 96`dpi") {
+        @ruleset();
+    }
+    // Especially for Safari
+    @media (-webkit-device-pixel-ratio: @pixel-ratio) {
+        @ruleset();
+    }
+}
+
+// Allow detect pointer type.
+//
+// @param pointer: coarse (for touchscreen) | fine (for mouse or trackpad)
+.media-pointer(@pointer, @ruleset) {
+    @media (pointer: @pointer) {
+        @ruleset();
+    }
+}
+
+// Allow check hover abilities.
+//
+// @param hover: true | false
+.media-hover(@hover, @ruleset) {
+    & when (@hover = true) {
+        @media (hover) {
+            @ruleset();
+        }
+    }
+    & when (@hover = false) {
+        @media (hover: none) {
+            @ruleset();
+        }
+    }
+}
+
+// @param orientation: portrait | landscape
+.media-orientation(@orientation, @ruleset) {
+    @media (orientation: @orientation) {
+        @ruleset();
+    }
+}

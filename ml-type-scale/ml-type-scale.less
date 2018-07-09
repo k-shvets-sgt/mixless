@@ -1,0 +1,64 @@
+//==================================================
+// Dependencies: ml-font.
+// Dependents:   none.
+//==================================================
+
+// This module automatically generate headings hierarchy.
+// Mixins call:
+// .generate-type-scale()
+//
+// Output in CSS:
+// h4 {
+//     font-size: 40px;
+//     line-height: 1.2;
+// }
+// ...
+// small {
+//     font-size: 12px;
+// }
+// p {
+//     font-size: 16px;
+//     line-height: 1.45;
+// }
+//
+// You can change the ratio. Just select one of preset ratio below or set your own.
+// By default the ratio is Major Third (@major-third, 1.250).
+
+// If you need to change the base font, you can do it in ml-font.
+@base-size:        16px;
+@base-line-height: 1.45;
+
+// Please don't edit this part. These are the preset options.
+@minor-second:     1.067;
+@major-second:     1.125;
+@minor-third:      1.200;
+@major-third:      1.250;
+@perfect-fourth:   1.333;
+@augmented-fourth: 1.414;
+@perfect-fifth:    1.500;
+@golden-ratio:     1.618;
+// You can change this option below if you want to change the ratio of type scale.
+@type-scale-ratio: @major-third;
+
+// Sets the line-height for `h1`, `h2`, `h3` and `h4`.
+@heading-line-height: 1.2;
+
+.generate-type-scale(@index: 4) when (@index > 0) {
+    @ratio: pow(@type-scale-ratio, @index);
+    h@{index} {
+        font-size: ceil(@base-size * @ratio);
+        line-height: @heading-line-height;
+    }
+    & when (@index = 1) {
+        small {
+            font-size: floor(@base-size/@type-scale-ratio);
+        }
+        p {
+            font-size: @base-size;
+            line-height: @base-line-height;
+        }
+    }
+    .generate-type-scale(@index - 1);
+}
+
+.generate-type-scale();

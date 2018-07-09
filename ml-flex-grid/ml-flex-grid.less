@@ -1,0 +1,189 @@
+//==================================================
+// Dependencies: ml-breakpoints and ml-media.
+// Dependents:   none.
+//==================================================
+@import (reference) "../ml-breakpoints/ml-breakpoints";
+@import (reference) "../ml-media/ml-media";
+
+// This grid uses breakpoints variables from ml-breakpoints and media queries from ml-media.
+// If you want to change the breakpoints or breakpoints prefixes you may to do it in ml-breakpoints.
+//
+// Mobile first principle applies.
+//
+// It will be automatically generate CSS-classes.
+
+// IMPORTANT NOTE!
+// The selectors .container, .row and [class*="column-"] will not generated unless calling .generate-grid().
+// In previous version they were created independently of the .generate-grid() calling.
+
+// Grid options.
+// You can change it if you need.
+@column-count:  12;
+@column-prefix: column-;
+@offset-prefix: offset-;
+@order-prefix:  order-;
+
+// If you don't want to use the gutters set this option to `none`.
+@column-gutter: 12px;
+
+// If you don't want to use the maximal width for container set this option to `none`.
+@container-max-width: 1280px;
+
+// Helper mixin for creating (or not) column gutters.
+.column-gutters() {
+    & when not (@column-gutter = none) {
+        padding-left: @column-gutter;
+        padding-right: @column-gutter;
+    }
+}
+
+// Helper mixin for creating (or not) container gutters.
+.container-gutters() {
+    .column-gutters();
+}
+
+// Helper mixin for set (or not) container max width.
+.container-max-width() {
+    & when not (@container-max-width = none) {
+        max-width: @container-max-width;
+    }
+}
+
+// Helper mixin for creating (or not) row gutters.
+.row-gutters() {
+    & when not (@column-gutter = none) {
+        padding-left: -@column-gutter;
+        padding-right: -@column-gutter;
+    }
+}
+
+// Ruleset for container.
+.container-ruleset() {
+    .container {
+        width: 100%;
+        .container-max-width();
+        .container-gutters();
+        margin: 0 auto;
+        .media-min(768 {
+            width: 93.75%;
+        });
+        .media-min(1280 {
+            width: 84.375%;
+        });
+    }
+}
+
+// Ruleset for row.
+.row-ruleset() {
+    .row {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        -webkit-flex-wrap: wrap;
+        flex-wrap: wrap;
+        .row-gutters();
+    }
+}
+
+// Common ruleset for all columns.
+.columns-ruleset() {
+    [class*=~'"@{column-prefix}"'] {
+        width: 100%;
+        min-height: 1px;
+        -webkit-box-flex: 0;
+    }
+}
+
+// NOTE!
+// .make-column(), .make-offset() and .make-order() are helper mixins for mixin .generate-grid().
+// I don't recommend to use them standalone.
+.make-column(@breakpoint-prefix: none, @index: @column-count) when (@index > 0) {
+    @width: ~"`(@{index} / @{column-count}) * 100`%";
+    @prefix: @breakpoint-prefix;
+    & when (@prefix = none) {
+        .@{column-prefix}@{index} {
+            -ms-flex: 0 0 @width;
+            -webkit-flex: 0 0 @width;
+            flex: 0 0 @width;
+            max-width: @width;
+            .column-gutters();
+        }
+    }
+    & when not (@prefix = none) {
+        .@{column-prefix}@{index}@{prefix} {
+            -ms-flex: 0 0 @width;
+            -webkit-flex: 0 0 @width;
+            flex: 0 0 @width;
+            max-width: @width;
+            .column-gutters();
+        }
+    }
+    .make-column(@prefix, @index - 1);
+}
+
+.make-offset(@breakpoint-prefix: none, @index: @column-count) when (@index > 0) {
+    @length: ~"`(@{index} / @{column-count}) * 100`%";
+    @prefix: @breakpoint-prefix;
+    & when (@prefix = none) {
+        .@{offset-prefix}@{index} {
+            margin-left: @length;
+        }
+    }
+    & when not (@prefix = none) {
+        .@{offset-prefix}@{index}@{prefix} {
+            margin-left: @length;
+        }
+    }
+    .make-offset(@prefix, @index - 1);
+}
+
+.make-order(@breakpoint-prefix: none, @index: @column-count) when (@index > 0) {
+    @prefix: @breakpoint-prefix;
+    & when (@prefix = none) {
+        .@{order-prefix}@{index} {
+            -webkit-box-ordinal-group: @index + 1;
+            -ms-flex-order: @index;
+            -webkit-order: @index;
+            order: @index;
+        }
+    }
+    & when not (@prefix = none) {
+        .@{order-prefix}@{index}@{prefix} {
+            -webkit-box-ordinal-group: @index + 1;
+            -ms-flex-order: @index;
+            -webkit-order: @index;
+            order: @index;
+        }
+    }
+    .make-order(@prefix, @index - 1);
+}
+
+// If you don't need .make-offset() or .make-order() just remove they calling in .generate-grid().
+.generate-grid(@breakpoints: @breakpoints, @prefixes: @breakpoints-prefixes, @index: 0) when (@index =< length(@breakpoints)) {
+    @point: extract(@breakpoints, @index);
+    @prefix: extract(@prefixes, @index);
+  	& when (@index = 0) {
+        // Write the rulesets.
+        .container-ruleset();
+        .row-ruleset();
+        .columns-ruleset();
+        // Call the .make- commands to create columns, offsets and orders.
+        .make-column();
+        .make-offset();
+        .make-order();
+    }
+    // When @index = 1, the iteration is skipped, so as not to create the grid for the smallest size.
+    & when (@index > 1) {
+        .media-min(@point {
+            // Call the .make- commands to create columns, offsets and orders.
+            .make-column(@prefix);
+            .make-offset(@prefix);
+            .make-order(@prefix);
+        });
+    }
+    .generate-grid(@breakpoints, @prefixes, @index + 1);
+}
+
+.generate-grid();

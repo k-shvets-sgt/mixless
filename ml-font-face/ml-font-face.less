@@ -1,0 +1,25 @@
+//==================================================
+// Dependencies: none.
+// Dependents:   none.
+//==================================================
+
+// Usage example:
+// .font-face('Open Sans', 'assets/fonts/opensans');
+// .font-face('Open Sans', 'assets/fonts/opensansbold', 700);
+// .font-face('Open Sans', 'assets/fonts/opensansitalicsemibold', 600, italic);
+//
+// By default it works with .woff2, .woff and .ttf.
+//
+// You can edit this mixin if you need more (or less) font types.
+// I hope you know how to do it.
+
+.font-face(@family, @path, @weight: normal, @style: normal) {
+    @font-face {
+        font-family: @family;
+        src: url('@{path}.woff2') format('woff2'),
+        url('@{path}.woff') format('woff'),
+        url('@{path}.ttf') format('truetype');
+        font-weight: @weight;
+        font-style: @style;
+    }
+}

@@ -1,0 +1,214 @@
+//==================================================
+// Dependencies: ml-breakpoints and ml-media.
+// Dependents:   none.
+//==================================================
+@import (reference) "../ml-breakpoints/ml-breakpoints";
+@import (reference) "../ml-media/ml-media";
+
+// Usage example:
+//
+// .class {
+//     .clearfix();
+//     .size(60px, 120px);
+// }
+.clearfix() {
+    &::before,
+    &::after {
+        display: table;
+        content: "";
+    }
+    &::after {
+        clear: both;
+    }
+}
+
+// @param: content | border | inherit
+.box-sizing(@sizing) {
+    & when not (@sizing = inherit) {
+        -webkit-box-sizing: ~"@{sizing}-box";
+        box-sizing: ~"@{sizing}-box";
+    }
+    & when (@sizing = inherit) {
+        -webkit-box-sizing: @sizing;
+        box-sizing: @sizing;
+    }
+}
+
+.size(@width, @height: @width) {
+    width: @width;
+    height: @height;
+}
+
+.center-block() {
+    margin: 0 auto;
+}
+
+.push-auto() {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.gutters(@value) {
+    padding-left: @value;
+    padding-right: @value;
+}
+
+.wrapper(@value) {
+    padding-top: @value;
+    padding-bottom: @value;
+}
+
+.hidden() {
+    display: none;
+}
+
+// Usage example:
+// .class {
+//     .transform(scale, 1.5);
+//     .transform(rotate, 45deg);
+// }
+//
+// CSS output:
+// .class {
+//     -webkit-transform: scale(1.5) rotate(45deg);
+//     transform: scale(1.5) rotate(45deg);
+// }
+.transform(@prop, @value) {
+    -webkit-transform+_: ~"@{prop}(@{value})";
+    transform+_: ~"@{prop}(@{value})";
+}
+
+// Usage example:
+// .class {
+//     .box-shadow(0 2px 5px 0 rgba(0, 0, 0, 0.16));
+//	   .box-shadow(0 2px 10px 0 rgba(0, 0, 0, 0.12));
+// }
+//
+// CSS output:
+// .class {
+//     -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+//     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+// }
+.box-shadow(@list) {
+    -webkit-box-shadow+: @list;
+    box-shadow+: @list;
+}
+
+// Usage example:
+// .class {
+//     .filter(grayscale, 50%);
+//     .filter(blur, 5px);
+// }
+//
+// CSS output:
+// .class {
+//     -webkit-filter: grayscale(50%) blur(5px);
+//     filter: grayscale(50%) blur(5px);
+// }
+.filter(@filter, @value) {
+    -webkit-filter+_: ~"@{filter}(@{value})";
+    filter+_: ~"@{filter}(@{value})";
+}
+
+// @param: auto (default) | none | text | all | contain
+.user-select(@select: auto) {
+    -webkit-user-select: @select;
+    -moz-user-select: @select;
+    -ms-user-select: @select;
+    user-select: @select;
+}
+
+// Usage example:
+// .class {
+//      .placeholder(#ccc);
+// }
+//
+// Or outside of any selector:
+// .placeholder(#ccc);
+.placeholder(@color) {
+    ::-webkit-input-placeholder {
+        color: @color;
+    }
+    ::-moz-placeholder {
+        color: @color;
+    }
+    :-ms-input-placeholder {
+        color: @color;
+    }
+    :-moz-placeholder {
+        color: @color;
+    }
+}
+
+// Generate helper classes to hidden elements on other screens.
+// Usage example:
+// .generate-hidden-classes();
+//
+// CSS output:
+// .hidden {
+//     display: none;
+// }
+// @media (max-width: 567px) {
+//     .hidden\@mobile-only {
+//         display: none;
+//     }
+// }
+// @media (min-width: 568px) {
+//     .hidden\@mobile-l {
+//         display: none;
+//     }
+// }
+// @media (min-width: 568px) and (max-width: 767px) {
+//     .hidden\@mobile-l-only {
+//         display: none;
+//     }
+// }
+// ...
+// @media (min-width: 1280px) {
+//     .hidden\@desktop {
+//         display: none;
+//     }
+// }
+
+// You can change it if you need.
+@hidden-class-prefix: hidden;
+
+.generate-hidden-classes(@breakpoints: @breakpoints, @prefixes: @breakpoints-prefixes, @index: 0) when (@index =< length(@breakpoints)) {
+    @prefix: extract(@prefixes, @index);
+    @point: extract(@breakpoints, @index);
+    & when (@index = 0) {
+        .@{hidden-class-prefix} {
+            .hidden();
+        }
+    }
+  	& when (@index = 1) {
+  		.@{hidden-class-prefix}@{prefix}-only {
+            .media-max(@point {
+                .hidden();
+            });
+        }
+  	}
+  	& when (@index > 1) and (@index < length(@breakpoints)) {
+        @next-point: extract(@breakpoints, @index + 1);
+        .@{hidden-class-prefix}@{prefix} {
+            .media-min(@point {
+                .hidden();
+            });
+        }
+        .@{hidden-class-prefix}@{prefix}-only {
+            .media-min-and-max(@point, @next-point {
+                .hidden();
+            });
+        }
+    }
+    & when (@index = length(@breakpoints)) {
+        .@{hidden-class-prefix}@{prefix} {
+            .media-min(@point {
+                .hidden();
+            });
+        }
+    }
+    .generate-hidden-classes(@breakpoints, @prefixes, @index + 1);
+}
+
+.generate-hidden-classes();

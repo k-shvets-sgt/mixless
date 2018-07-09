@@ -1,0 +1,54 @@
+//==================================================
+// Dependencies: none.
+// Dependents:   ml-flex-grid and ml-helper.
+//==================================================
+
+// `-l` in @mobile-l and @tablet-l means `larger`
+//
+// mobile:   <= 567px
+// mobile-l: >= 568px
+// tablet:   >= 768px
+// tablet-l: >= 1024px
+// desktop:  >= 1280px
+
+// The smallest screen size must be equal to the next screen size.
+@mobile:   @mobile-l;
+@mobile-l: 568;
+@tablet:   768;
+@tablet-l: 1024;
+@desktop:  1280;
+
+// IMPORTANT NOTE!
+// You should keep the accordance between breakpoints and breakpoints prefixes.
+// But length of @breakpoints is always less by one than @breakpoints-prefixes,
+// because the smallest screen size doesn't have own breakpoint but have prefix.
+
+// @breakpoints and @breakpoints-prefixes are using in ml-flex-grid and ml-helper.
+@breakpoints: @mobile, @mobile-l, @tablet, @tablet-l, @desktop;
+
+// BEMIT version
+// NOTE!
+// The '\' required to escape '@' in outputting CSS.
+@breakpoints-prefixes: ~"\@mobile", ~"\@mobile-l", ~"\@tablet", ~"\@tablet-l", ~"\@desktop";
+
+// Or you can use usual version.
+// @breakpoints-prefixes: _mobile, _mobile-l, _tablet, _tablet-l, _desktop;
+
+// Also you can use the shorter version.
+//
+// xs: <= 567px,
+// sm: >= 568px,
+// md: >= 768px,
+// lg: >= 1024px,
+// xl: >= 1280px
+
+// Just uncomment this part.
+//
+// @xs: @sm;
+// @sm: 568;
+// @md: 768;
+// @lg: 1024;
+// @xl: 1280;
+//
+// @breakpoints:          @xs, @sm, @md, @lg, @xl;
+// @breakpoints-prefixes: _xs, _sm, _md, _lg, _xl;
