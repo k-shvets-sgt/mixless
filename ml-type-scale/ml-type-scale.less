@@ -25,7 +25,7 @@
 // By default the ratio is Major Third (@major-third, 1.250).
 
 // If you need to change the base font, you can do it in ml-font.
-@base-size:        16px;
+@base-font-size:   16px;
 @base-line-height: 1.45;
 
 // Please don't edit this part. These are the preset options.
@@ -46,15 +46,15 @@
 .generate-type-scale(@index: 4) when (@index > 0) {
     @ratio: pow(@type-scale-ratio, @index);
     h@{index} {
-        font-size: ceil(@base-size * @ratio);
+        font-size: ceil(@base-font-size * @ratio);
         line-height: @heading-line-height;
     }
     & when (@index = 1) {
         small {
-            font-size: floor(@base-size/@type-scale-ratio);
+            font-size: floor(@base-font-size/@type-scale-ratio);
         }
         p {
-            font-size: @base-size;
+            font-size: @base-font-size;
             line-height: @base-line-height;
         }
     }
