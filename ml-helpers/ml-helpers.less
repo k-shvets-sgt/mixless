@@ -36,20 +36,6 @@
     }
 }
 
-// Usage example:
-// .class {
-//     .px-to-rem(margin, 24);
-// }
-//
-// CSS output:
-// .class {
-//     margin: 1.5rem;
-// }
-.px-to-rem(@prop, @value) {
-    @value-in-rem: unit(@value) / unit(@rem-in-px);
-    @{prop}: ~"@{value-in-rem}rem";
-}
-
 .size(@width, @height: @width) {
     width: @width;
     height: @height;
